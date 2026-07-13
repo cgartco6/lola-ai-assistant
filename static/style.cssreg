@@ -1,0 +1,244 @@
+/* ------------------------------------------------------------
+   LOLA – FULL STYLING
+   Sexy, dark, with neon pink accents and a sultry vibe
+   ------------------------------------------------------------ */
+
+body {
+    background: linear-gradient(145deg, #1a0b1f, #2d1b33);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 15px;
+    color: #f5e6f0;
+}
+
+/* ----- Main Chat Container ----- */
+#chat {
+    background: rgba(45, 20, 50, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 40px;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(255, 0, 150, 0.3);
+    border: 1px solid #ff66b2;
+    transition: all 0.3s ease;
+}
+
+/* ----- Title / Header ----- */
+h1 {
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #ff99cc;
+    text-shadow: 0 0 20px #ff3399, 0 0 60px #ff339966;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* ----- Messages Box ----- */
+#messages {
+    height: 320px;
+    overflow-y: auto;
+    background: #1f0f24;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #661a4d;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#messages p {
+    background: #331a3a;
+    padding: 10px 15px;
+    border-radius: 30px 30px 30px 5px;
+    margin: 0;
+    border-left: 4px solid #ff3399;
+    word-wrap: break-word;
+    max-width: 85%;
+    align-self: flex-start;
+    animation: fadeIn 0.3s ease;
+}
+
+#messages p:last-child {
+    margin-bottom: 0;
+}
+
+#messages p:has(strong) {
+    /* user messages are styled inline via JS */
+}
+
+/* Style for user messages (applied via JS) */
+#messages p[style*="text-align: right"] {
+    border-left: none;
+    border-right: 4px solid #ff99cc;
+    background: #2a1a30;
+    align-self: flex-end;
+    border-radius: 30px 30px 5px 30px;
+}
+
+/* ----- Input Row ----- */
+#input {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 50px;
+    background: #1f0f24;
+    color: #f5e6f0;
+    border: 1px solid #993366;
+    outline: none;
+    font-size: 16px;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+#input:focus {
+    border-color: #ff66b2;
+    box-shadow: 0 0 15px #ff339966;
+}
+
+/* ----- Send Button ----- */
+button {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 50px;
+    background: #ff3399;
+    color: #1a0b1f;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 20px #ff3399aa;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: #ff66b2;
+    box-shadow: 0 0 40px #ff3399;
+    transform: scale(1.05);
+}
+
+/* ----- Mic Button (Voice Input) ----- */
+#micButton {
+    background: #993366;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px #99336688;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#micButton:hover {
+    background: #ff66b2;
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #ff66b2aa;
+}
+
+#micButton:active {
+    transform: scale(0.9);
+}
+
+/* ----- Audio Player ----- */
+#audioPlayer {
+    margin-top: 15px;
+    width: 100%;
+    border-radius: 50px;
+    background: #1f0f24;
+    border: 1px solid #993366;
+}
+
+/* ----- Speed Display (live alert) ----- */
+#speedDisplay {
+    background: #1f0f24;
+    padding: 10px 16px;
+    border-radius: 20px;
+    border-left: 4px solid #ff3399;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: 15px;
+    min-height: 28px;
+    color: #ffccdd;
+    word-wrap: break-word;
+}
+
+/* ----- Scrollbar styling ----- */
+#messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#messages::-webkit-scrollbar-track {
+    background: #1a0b1f;
+    border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+    background: #ff3399;
+    border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+    background: #ff66b2;
+}
+
+/* ----- Animation ----- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----- Responsive tweaks ----- */
+@media (max-width: 480px) {
+    #chat {
+        padding: 20px 15px;
+        border-radius: 30px;
+    }
+    h1 {
+        font-size: 1.6rem;
+    }
+    #messages {
+        height: 250px;
+    }
+    button {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    #micButton {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    #input {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+}
+
+/* ----- Optional: Link to map ----- */
+#mapLink {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #ff99cc;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+#mapLink:hover {
+    opacity: 1;
+    text-shadow: 0 0 15px #ff3399;
+}
