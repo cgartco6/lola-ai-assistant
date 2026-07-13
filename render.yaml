@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: lola-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: WEATHER_API_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: mistral
+      - key: TTS_ENGINE
+        value: pyttsx3
+      - key: RADIO_STREAM
+        value: https://zas4.ndx.co.za/proxy/bokradio?mp=/stream
+      - key: DEFAULT_LAT
+        value: -26.2041
+      - key: DEFAULT_LON
+        value: 28.0473
