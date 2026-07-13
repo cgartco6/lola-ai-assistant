@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lola – My Slegte AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="chat">
+        <h1>🍑 Lola</h1>
+        <div id="messages"></div>
+        <div style="display:flex; gap:5px;">
+            <input id="input" placeholder="Praat met my, skat..." />
+            <button onclick="send()">Stuur</button>
+        </div>
+        <audio id="audioPlayer" controls style="width:100%; margin-top:10px;"></audio>
+    </div>
+    <script>
+        const ws = new WebSocket("ws://" + window.location.host + "/ws");
+        const messages = document.getElementById("messages");
+        const input = document.getElementById("input");
+        const audioPlayer = document.getElementById("audioPlayer");
+
+        ws.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const p = document.createElement("p");
+            p.textContent = "Lola: " + data.reply;
+            messages.appendChild(p);
+            messages.scrollTop = messages.scrollHeight;
+            if (data.audio) {
+                audioPlayer.src = data.audio;
+                audioPlayer.play();
+            }
+        };
+
+        function send() {
+            const msg = input.value.trim();
+            if (!msg) return;
+            const p = document.createElement("p");
+            p.textContent = "Jy: " + msg;
+            p.style.textAlign = "right";
+            p.style.borderLeft = "none";
+            p.style.borderRight = "4px solid #ff99cc";
+            messages.appendChild(p);
+            ws.send(JSON.stringify({ msg: msg }));
+            input.value = "";
+            // Send GPS
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    ws.send(JSON.stringify({
+                        lat: pos.coords.latitude,
+                        lon: pos.coords.longitude
+                    }));
+                });
+            }
+        }
+
+        input.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") send();
+        });
+
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    ws.send(JSON.stringify({
+                        lat: pos.coords.latitude,
+                        lon: pos.coords.longitude
+                    }));
+                });
+            }
+        };
+    </script>
+</body>
+</html>
