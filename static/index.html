@@ -10,9 +10,11 @@
     <div id="chat">
         <h1>🍑 Lola</h1>
         <div id="messages"></div>
-        <div style="display:flex; gap:5px;">
+        <div id="speedDisplay" style="color: #ff99cc; margin-bottom: 10px;"></div>
+        <div style="display:flex; gap:5px; align-items:center;">
             <input id="input" placeholder="Praat met my, skat..." />
             <button onclick="send()">Stuur</button>
+            <button id="micButton" style="background: #993366; padding: 10px 15px;">🎤</button>
         </div>
         <audio id="audioPlayer" controls style="width:100%; margin-top:10px;"></audio>
     </div>
@@ -21,6 +23,30 @@
         const messages = document.getElementById("messages");
         const input = document.getElementById("input");
         const audioPlayer = document.getElementById("audioPlayer");
+        const speedDisplay = document.getElementById("speedDisplay");
+
+        // Speech Recognition (voice input)
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'af-ZA'; // can be changed
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                send();
+            };
+            recognition.onerror = function(event) {
+                console.error("Voice error", event);
+            };
+            document.getElementById("micButton").addEventListener("click", function() {
+                recognition.start();
+            });
+        } else {
+            document.getElementById("micButton").style.display = "none";
+        }
 
         ws.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -31,6 +57,9 @@
             if (data.audio) {
                 audioPlayer.src = data.audio;
                 audioPlayer.play();
+            }
+            if (data.speed_alert) {
+                speedDisplay.textContent = "🚦 " + data.speed_alert;
             }
         };
 
@@ -45,12 +74,15 @@
             messages.appendChild(p);
             ws.send(JSON.stringify({ msg: msg }));
             input.value = "";
-            // Send GPS
+            // Send GPS + speed
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
+                    // Estimate speed from position change? We'll just send speed from device if available
+                    const speed = pos.coords.speed ? pos.coords.speed * 3.6 : 0; // m/s to km/h
                     ws.send(JSON.stringify({
                         lat: pos.coords.latitude,
-                        lon: pos.coords.longitude
+                        lon: pos.coords.longitude,
+                        speed: speed
                     }));
                 });
             }
@@ -63,9 +95,11 @@
         window.onload = function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
+                    const speed = pos.coords.speed ? pos.coords.speed * 3.6 : 0;
                     ws.send(JSON.stringify({
                         lat: pos.coords.latitude,
-                        lon: pos.coords.longitude
+                        lon: pos.coords.longitude,
+                        speed: speed
                     }));
                 });
             }
